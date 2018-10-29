@@ -1,4 +1,4 @@
-/* Nickolas Schiffer #012279319
+/* Nickolas Schiffer ID #012279319, GID #37
    CMPE 142 Programming Project #3 */
 
 #include <stdlib.h>
