@@ -6,7 +6,7 @@
         {
             "label": "build",
             "type": "shell",
-            "command": "gcc -o PP3 ./PP3.c"
+            "command": "gcc -o PP4 ./PP4.c"
         }
     ]
 }
