@@ -6,7 +6,7 @@
         {
             "label": "build",
             "type": "shell",
-            "command": "gcc -o PP4 ./PP4.c -pthread -g"
+            "command": "gcc -pthread -g -o PP4 ./PP4.c"
         }
     ]
 }
