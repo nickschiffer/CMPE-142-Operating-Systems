@@ -7,6 +7,11 @@
             "label": "build",
             "type": "shell",
             "command": "gcc -pthread -g -o PP4 ./PP4.c"
+        },
+        {
+            "label": "build1",
+            "type": "shell",
+            "command": "gcc -pthread -g -o PP4 ./PP4.1.c"
         }
     ]
 }
