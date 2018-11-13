@@ -24,17 +24,17 @@ char producer_message[BUFSIZ + 1];
 int depth_size = -1;
 int producer_flag = -1, consumer_flag = -1, monitor_flag = -1;
 int unix_socket_flag = -1, shared_memory_flag = -1;
-int advance_flag = 0;
+int consumerance_flag = 0;
 
 key_t key = 1234;
-int sem_set_id;
+int consumerid;
 int shm_id;
 
 //producer for unix sockets
 void producer_u(){
     //acquire shared semaphore from kernel memory
     sem_t *sem = sem_open(SNAME, 0);
-    
+
     //acquire pointer to shared memory
    
     while(1){
@@ -83,45 +83,6 @@ void semaphore_init(){
 
 int main(int argc, char *argv[]){
     int c;
-
-    /*
-    Set up -u, -s, -q [int] arguments. These handle the unix socket,
-    shared memory, and queue depth.
-    */
-    // while((c = getopt(argc, argv, "usq:p:ce")) != -1){
-    //     switch(c){
-    //         case 'u':
-    //             if (shared_memory_flag == 1){
-    //                 fprintf(stderr, "Error, -s (Shared Memory) already selected.\n");
-    //                 exit(EXIT_FAILURE);
-    //             }
-    //             unix_socket_flag = 1;
-    //             shared_memory_flag = 0;
-    //             break;
-    //         case 's':
-    //             if (unix_socket_flag == 1){
-    //                 fprintf(stderr, "Error, -u (Unix Socket) already selected.\n");
-    //                 exit(EXIT_FAILURE);
-    //             }
-    //             unix_socket_flag = 1;
-    //             shared_memory_flag = 0;
-    //             break;
-    //         case 'q':
-    //             if (optarg == NULL){
-    //                 fprintf(stderr, "Error, option q requires parameter [int: queue_depth].\n");
-    //                 exit(EXIT_FAILURE);
-    //             }
-    //             if ((depth_size = atoi(optarg)) <= 0){
-    //                 fprintf(stderr, "Error, Queue depth must be an int > 0\n");
-    //                 exit(EXIT_FAILURE);
-    //             }
-    //             break;
-    //         case '?':
-    //         continue;
-    //     }
-    // }
-
-
 
     /*
     Handle -p -m, -c, and -e arguments. These handle producer (with string: message), consumer, and monitor. 
@@ -198,9 +159,53 @@ int main(int argc, char *argv[]){
         }
         
     }
-    semaphore_init();
-    shared_mem_init();
-
+    if (unix_socket_flag == -1 || shared_memory_flag == -1){
+        if (depth_size == -1){
+            fprintf(stderr,"Error, must specify (-u or -s) and -q options first.\n");
+            exit(EXIT_FAILURE);
+        }
+    }
+    else if (depth_size == -1){
+        fprintf(stderr,"Error,must specify queue depth with -q first.\n");
+        exit(EXIT_FAILURE);
+    }
+    else if (producer_flag == 1){
+        if (shared_memory_flag == 1){
+            producer_s();
+        }
+        else if (unix_socket_flag == 1){
+            producer_u();
+        }
+        else {
+            fprintf(stderr, "Error, must specify (-u or -s) and -q options first.\n");
+            exit(EXIT_FAILURE);
+        }
+    }
+    else if (consumer_flag == 1){
+        if (shared_memory_flag == 1){
+            consumer_s();
+        }
+        else if (unix_socket_flag == 1){
+            consumer_u();
+        }
+        else {
+            fprintf(stderr, "Error, must specify (-u or -s) and -q options first.\n");
+            exit(EXIT_FAILURE);
+        }
+    }
+    else if (monitor_flag == 1){
+        monitor();
+    }
+    else{
+        semaphore_init();
+        if (shared_memory_flag == 1){
+            shared_mem_init();
+        }
+        if (unix_socket_flag == 1){
+            unix_socket_init();
+        }
+        
+    }
     while(1){
 
     }
