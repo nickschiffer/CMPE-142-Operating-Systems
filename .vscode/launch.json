@@ -9,7 +9,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/producer-consumer",
-            "args": ["-p -m \"hello there\""],
+            "args": ["-q 10", "-s"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
